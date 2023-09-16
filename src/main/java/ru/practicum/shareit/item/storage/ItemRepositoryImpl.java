@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -84,6 +85,9 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Collection<Item> getSearchedItems(int ownerId, String text) {
+        if (text.isBlank()) {
+            return new ArrayList<>();
+        }
         return items.values().stream()
                 .filter(item -> item.getDescription().toLowerCase().contains(text) || item.getName().toLowerCase().contains(text))
                 .filter(item -> item.getAvailable().equals(true))

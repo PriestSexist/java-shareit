@@ -7,7 +7,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 
 /**
@@ -52,7 +51,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> getSearchedItems(@RequestHeader("X-Sharer-User-Id") int ownerId, @NotBlank @RequestParam String text) {
+    public Collection<ItemDto> getSearchedItems(@RequestHeader("X-Sharer-User-Id") int ownerId, @RequestParam String text) {
         log.debug("Вызван метод getSearchedItems");
         return itemService.getSearchedItems(ownerId, text);
     }
