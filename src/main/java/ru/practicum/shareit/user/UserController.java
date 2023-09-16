@@ -21,31 +21,31 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping
-    public UserDto postUser (@Valid @RequestBody UserDto userDto) {
+    public UserDto postUser(@Valid @RequestBody UserDto userDto) {
         log.debug("Вызван метод postUser");
         return userServiceImpl.postUser(userDto);
     }
 
     @PatchMapping("/{id}")
-    public UserDto patchUser (@RequestBody UserDto userDto, @PathVariable int id) {
+    public UserDto patchUser(@RequestBody UserDto userDto, @PathVariable int id) {
         log.debug("Вызван метод patchUser");
         return userServiceImpl.patchUser(id, userDto);
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById (@PathVariable int id) {
+    public UserDto getUserById(@PathVariable int id) {
         log.debug("Вызван метод getUserById");
         return userServiceImpl.getUserById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById (@PathVariable int id) {
+    public void deleteUserById(@PathVariable int id) {
         log.debug("Вызван метод deleteUserById");
         userServiceImpl.deleteUserById(id);
     }
 
     @GetMapping
-    public Collection<UserDto> getAllUsers () {
+    public Collection<UserDto> getAllUsers() {
         log.debug("Вызван метод getAllUsers");
         return userServiceImpl.getAllUsers();
     }

@@ -16,6 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final HashMap<Integer, User> users = new HashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
+
     @Override
     public User postUser(User user) {
 
@@ -43,11 +44,11 @@ public class UserRepositoryImpl implements UserRepository {
             throw new SameEmailException("This email was registered");
         }
 
-        if (user.getEmail()!=null) {
+        if (user.getEmail() != null) {
             userForReplace.setEmail(user.getEmail());
         }
 
-        if (user.getName()!=null) {
+        if (user.getName() != null) {
             userForReplace.setName(user.getName());
         }
 
@@ -67,7 +68,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteUser(int userId) {
-        if (users.remove(userId)==null) {
+        if (users.remove(userId) == null) {
             throw new UserNotFoundException("User not found");
         }
     }

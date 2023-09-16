@@ -26,7 +26,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item postItem(Item item) {
 
-        if (userRepository.getUserById(item.getOwnerId())==null) {
+        if (userRepository.getUserById(item.getOwnerId()) == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -40,19 +40,19 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         Item itemForReplace = items.get(item.getId());
 
-        if (item.getOwnerId()!=itemForReplace.getOwnerId()) {
+        if (item.getOwnerId() != itemForReplace.getOwnerId()) {
             throw new WrongIdException("Owner ids are different");
         }
 
-        if (item.getName()!=null) {
+        if (item.getName() != null) {
             itemForReplace.setName(item.getName());
         }
 
-        if (item.getDescription()!=null) {
+        if (item.getDescription() != null) {
             itemForReplace.setDescription(item.getDescription());
         }
 
-        if (item.getAvailable()!=null) {
+        if (item.getAvailable() != null) {
             itemForReplace.setAvailable(item.getAvailable());
         }
 
@@ -70,7 +70,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public void deleteItemById(int itemId) {
-        if (items.remove(itemId)==null) {
+        if (items.remove(itemId) == null) {
             throw new ItemNotFoundException("Item not found");
         }
     }
@@ -78,7 +78,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Collection<Item> getAllItems(int ownerId) {
         return items.values().stream()
-                .filter(item -> item.getOwnerId()==ownerId)
+                .filter(item -> item.getOwnerId() == ownerId)
                 .collect(Collectors.toList());
     }
 

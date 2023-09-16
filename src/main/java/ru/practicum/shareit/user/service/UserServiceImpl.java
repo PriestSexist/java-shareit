@@ -12,35 +12,35 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepositoryImpl;
 
     @Override
-    public UserDto postUser (UserDto userDto) {
+    public UserDto postUser(UserDto userDto) {
         User user = UserMapper.createUser(userDto);
         return UserMapper.createUserDto(userRepositoryImpl.postUser(user));
     }
 
     @Override
-    public UserDto patchUser (int userId, UserDto userDto) {
+    public UserDto patchUser(int userId, UserDto userDto) {
         User user = UserMapper.createUser(userDto);
         user.setId(userId);
         return UserMapper.createUserDto(userRepositoryImpl.patchUser(user));
     }
 
     @Override
-    public UserDto getUserById (int userId) {
+    public UserDto getUserById(int userId) {
         return UserMapper.createUserDto(userRepositoryImpl.getUserById(userId));
     }
 
     @Override
-    public void deleteUserById (int userId) {
+    public void deleteUserById(int userId) {
         userRepositoryImpl.deleteUser(userId);
     }
 
     @Override
-    public Collection<UserDto> getAllUsers () {
+    public Collection<UserDto> getAllUsers() {
         return userRepositoryImpl.getAllUsers().stream()
                 .map(UserMapper::createUserDto)
                 .collect(Collectors.toList());
