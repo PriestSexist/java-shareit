@@ -50,8 +50,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getSearchedItems(int ownerId, String text) {
-        text = text.toLowerCase();
-        return itemRepository.getSearchedItems(ownerId, text).stream()
+        return itemRepository.getSearchedItems(ownerId, text.toLowerCase()).stream()
                 .map(ItemMapper::createItemDto)
                 .collect(Collectors.toList());
     }
