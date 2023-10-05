@@ -44,7 +44,7 @@ public class UserController {
         userServiceImpl.deleteUserById(id);
     }
 
-    @GetMapping
+    @GetMapping()
     public Collection<UserDto> getAllUsers() {
         log.debug("Вызван метод getAllUsers");
         return userServiceImpl.getAllUsers();

@@ -2,17 +2,15 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.booking.model.ShortBooking;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder
-public class ItemDto {
+public class ItemDtoWithBooking {
     private final int id;
     @NotBlank(message = "name can't be blank")
     private final String name;
@@ -21,5 +19,7 @@ public class ItemDto {
     @NotNull(message = "available can't be null")
     private final Boolean available;
     private final int ownerId;
-    private final List<CommentDto> comment;
+    private final ShortBooking lastBooking;
+    private final ShortBooking nextBooking;
+    private final List<CommentDto> comments;
 }
