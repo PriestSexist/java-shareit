@@ -9,9 +9,6 @@ import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import javax.validation.Valid;
 import java.util.Collection;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
@@ -19,9 +16,10 @@ import java.util.Collection;
 public class BookingController {
 
     private final BookingServiceImpl bookingService;
+    private static final String OWNER_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public BookingDto postBooking(@RequestHeader("X-Sharer-User-Id") int ownerId,
+    public BookingDto postBooking(@RequestHeader(OWNER_HEADER) int ownerId,
                                   @Valid @RequestBody BookingDto bookingDto) {
         log.debug("Вызван метод postBooking");
         return bookingService.postBooking(ownerId, bookingDto);
@@ -30,28 +28,28 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public BookingDto patchBooking(@PathVariable int bookingId,
                                    @RequestParam Boolean approved,
-                                   @RequestHeader("X-Sharer-User-Id") int ownerId) {
+                                   @RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод patchBooking");
         return bookingService.patchBooking(bookingId, approved, ownerId);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@PathVariable int bookingId,
-                                     @RequestHeader("X-Sharer-User-Id") int ownerId) {
+                                     @RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод getBookingById");
         return bookingService.getBookingById(bookingId, ownerId);
     }
 
-    @GetMapping()
+    @GetMapping
     public Collection<BookingDto> getItemsThatIBooked(@RequestParam(defaultValue = "ALL") String state,
-                                                      @RequestHeader("X-Sharer-User-Id") int ownerId) {
+                                                      @RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод getItemsThatIBooked");
         return bookingService.getItemsThatIBooked(state, ownerId);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDto> getBookingsOfMyItems(@RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestHeader("X-Sharer-User-Id") int ownerId) {
+                                                       @RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод getBookingsOfMyItems");
         return bookingService.getBookingsOfMyItems(state, ownerId);
     }

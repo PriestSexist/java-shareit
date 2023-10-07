@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.model.ShortBooking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-public class BookingMapper {
+public final class BookingMapper {
     public static Booking createBooking(BookingDto bookingDto, Item item, User booker) {
         return Booking.builder()
                 .start(bookingDto.getStart())

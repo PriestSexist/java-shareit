@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.exception.BookingNotFoundException;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
-import ru.practicum.shareit.item.exception.CommentNotFoundException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.WrongIdException;
 import ru.practicum.shareit.item.mapper.CommentMapper;
@@ -45,14 +45,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto postItem(int ownerId, ItemDto itemDto) {
 
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-
-
-        if (userFromDb.isEmpty()) {
+        User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
-        Item item = ItemMapper.createItem(itemDto, userFromDb.get());
+        Item item = ItemMapper.createItem(itemDto, userFromDb);
 
 
         return ItemMapper.createItemDtoWithoutComments(itemRepository.save(item));
@@ -62,47 +59,35 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto patchItem(int itemId, int ownerId, ItemDto itemDto) {
 
-        Optional<Item> itemFromDb = itemRepository.findItemById(itemId);
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-
-        if (userFromDb.isEmpty()) {
+        User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
-        if (itemFromDb.isEmpty()) {
+        Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> {
             throw new ItemNotFoundException("Item not found");
-        }
+        });
 
-        if (itemFromDb.get().getOwner().getId() != ownerId) {
+
+        if (itemFromDb.getOwner().getId() != ownerId) {
             throw new WrongIdException("You don't have access to patch this object");
         }
 
-
-        Item item = ItemMapper.createItem(itemDto, userFromDb.get());
+        Item item = ItemMapper.createItem(itemDto, userFromDb);
         item.setId(itemId);
 
         if (item.getName() != null) {
-            itemFromDb.get().setName(item.getName());
+            itemFromDb.setName(item.getName());
         }
 
         if (item.getDescription() != null) {
-            itemFromDb.get().setDescription(item.getDescription());
+            itemFromDb.setDescription(item.getDescription());
         }
 
         if (item.getAvailable() != null) {
-            itemFromDb.get().setAvailable(item.getAvailable());
+            itemFromDb.setAvailable(item.getAvailable());
         }
 
-        // Если сделать таким образом, то в базе данных изменения не меняются до 3 вызова метода. Я не знаю почему.
-        // Хотя, что забавно, подобный способ работает с UserService и я не знаю почему и какой вариант правильнее.
-        // Мне нравится вариант, который сейчас в ItemService выше
-
-        /*if (item.getAvailable()!=null) {
-            itemRepository.updateItemAvailableById(item.getAvailable(), itemId);
-            System.out.println(itemRepository.findAll());
-        }*/
-
-        return ItemMapper.createItemDtoWithoutComments(itemRepository.save(itemFromDb.get()));
+        return ItemMapper.createItemDtoWithoutComments(itemRepository.save(itemFromDb));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -110,40 +95,42 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoWithBooking getItemById(int ownerId, int itemId) {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
 
-        Optional<Item> itemFromDb = itemRepository.findItemById(itemId);
-
-        if (itemFromDb.isEmpty()) {
+        Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> {
             throw new ItemNotFoundException("Item not found");
-        }
+        });
 
         List<CommentDto> commentDtoList = commentRepository.findAllByItemId(itemId).stream()
                 .map(CommentMapper::createCommentDto)
                 .collect(Collectors.toList());
 
-        if (ownerId == itemFromDb.get().getOwner().getId()) {
+        if (ownerId == itemFromDb.getOwner().getId()) {
 
             List<Booking> list = bookingRepository.findLastByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED, localDateTimeNow);
             List<Booking> list1 = bookingRepository.findNextByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED, localDateTimeNow);
             Optional<Booking> lastBookingOptional = list.stream().findFirst();
             Optional<Booking> nextBookingOptional = list1.stream().findFirst();
 
-            return ItemMapperWithBooking.createItemDtoWithBooking(itemFromDb.get(),
+            return ItemMapperWithBooking.createItemDtoWithBooking(itemFromDb,
                     BookingMapper.createShortBooking(lastBookingOptional.orElse(null)),
                     BookingMapper.createShortBooking(nextBookingOptional.orElse(null)),
                     commentDtoList);
         }
-        return ItemMapperWithBooking.createItemDtoWithBooking(itemFromDb.get(), null, null, commentDtoList);
+        return ItemMapperWithBooking.createItemDtoWithBooking(itemFromDb, null, null, commentDtoList);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteItemById(int itemId) {
+
+        itemRepository.findItemById(itemId).orElseThrow(() -> {
+            throw new ItemNotFoundException("Item not found");
+        });
+
         itemRepository.deleteById(itemId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    // МБ n+1 проблема? Если да, то как тогда лучше?
     public Collection<ItemDtoWithBooking> getAllItems(int ownerId) {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
 
@@ -172,24 +159,22 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public CommentDto postComment(int ownerId, int itemId, CommentDto commentDto) {
+
         LocalDateTime localDateTimeNow = LocalDateTime.now();
-        Optional<Booking> bookingFromDb = bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(ownerId, localDateTimeNow, BookingStatus.APPROVED);
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-        Optional<Item> itemFromDb = itemRepository.findItemById(itemId);
 
-        if (bookingFromDb.isEmpty()) {
-            throw new CommentNotFoundException("Comment not found");
-        }
+        bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(ownerId, localDateTimeNow, BookingStatus.APPROVED).orElseThrow(() -> {
+            throw new BookingNotFoundException("Booking not found");
+        });
 
-        if (userFromDb.isEmpty()) {
+        User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
-        if (itemFromDb.isEmpty()) {
+        Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> {
             throw new ItemNotFoundException("Item not found");
-        }
+        });
 
-        Comment comment = CommentMapper.createComment(commentDto, userFromDb.get(), itemFromDb.get());
+        Comment comment = CommentMapper.createComment(commentDto, userFromDb, itemFromDb);
 
         return CommentMapper.createCommentDto(commentRepository.save(comment));
 

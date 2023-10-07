@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,42 +31,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto patchUser(int userId, UserDto userDto) {
 
-        Optional<User> userFromDb = userRepository.findUserByEmail(userDto.getEmail());
+        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> {
+            throw new UserNotFoundException("User not found");
+        });
 
-        if (userFromDb.isPresent() && userFromDb.get().getId() != userId) {
+        if (userFromDb.getId() != userId) {
             throw new SameEmailException("This email already exists");
         }
 
-        User user = UserMapper.createUser(userDto);
-        user.setId(userId);
-
-        if (user.getName() == null && user.getEmail() != null) {
-            userRepository.updateUserEmailById(user.getEmail(), userId);
-            Optional<User> optionalUser = userRepository.findUserById(userId);
-            return UserMapper.createUserDto(optionalUser.get());
+        if (userDto.getEmail() != null) {
+            userFromDb.setEmail(userDto.getEmail());
         }
 
-        if (user.getEmail() == null && user.getName() != null) {
-            userRepository.updateUserNameById(user.getName(), userId);
-            return UserMapper.createUserDto(userRepository.findUserById(userId).get());
+        if (userDto.getName() != null) {
+            userFromDb.setName(userDto.getName());
         }
 
-        return UserMapper.createUserDto(userRepository.save(user));
+        return UserMapper.createUserDto(userRepository.save(userFromDb));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public UserDto getUserById(int userId) {
-        Optional<User> userFromDb = userRepository.findUserById(userId);
-        if (userFromDb.isEmpty()) {
+        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
-        return UserMapper.createUserDto(userFromDb.get());
+        });
+        return UserMapper.createUserDto(userFromDb);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteUserById(int userId) {
+        userRepository.findUserById(userId).orElseThrow(() -> {
+            throw new UserNotFoundException("User not found");
+        });
         userRepository.deleteById(userId);
     }
 

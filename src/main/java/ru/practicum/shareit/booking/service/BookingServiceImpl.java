@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,30 +32,28 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto postBooking(int ownerId, BookingDto bookingDto) {
 
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-        Optional<Item> itemFromDb = itemRepository.findItemById(bookingDto.getItemId());
-
         if (bookingDto.getStart().isAfter(bookingDto.getEnd()) || bookingDto.getStart().equals(bookingDto.getEnd())) {
             throw new BookingTimeException("Error with booking time");
         }
 
-        if (userFromDb.isEmpty()) {
+        User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
-        if (itemFromDb.isEmpty()) {
+        Item itemFromDb = itemRepository.findItemById(bookingDto.getItemId()).orElseThrow(() -> {
             throw new ItemNotFoundException("Item not found");
-        }
+        });
 
-        if (!itemFromDb.get().getAvailable()) {
+
+        if (!itemFromDb.getAvailable()) {
             throw new ItemNotAvailableForBookingException("Item not available for booking due to available = false");
         }
 
-        if (userFromDb.get().getId() == itemFromDb.get().getOwner().getId()) {
+        if (userFromDb.getId() == itemFromDb.getOwner().getId()) {
             throw new BookingIdException("Item not available for booking due to you can't book your own item");
         }
 
-        Booking booking = BookingMapper.createBooking(bookingDto, itemFromDb.get(), userFromDb.get());
+        Booking booking = BookingMapper.createBooking(bookingDto, itemFromDb, userFromDb);
         booking.setStatus(BookingStatus.WAITING);
         return BookingMapper.createBookingDto(bookingRepository.save(booking));
     }
@@ -64,39 +61,31 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto patchBooking(int bookingId, Boolean approved, int ownerId) {
 
-        Optional<Booking> bookingFromDb = bookingRepository.findBookingById(bookingId);
-
-        if (bookingFromDb.isEmpty()) {
+        Booking bookingFromDb = bookingRepository.findBookingById(bookingId).orElseThrow(() -> {
             throw new BookingNotFoundException("Booking not found");
-        }
+        });
 
-        if (bookingFromDb.get().getItem().getOwner().getId() != ownerId) {
+        if (bookingFromDb.getItem().getOwner().getId() != ownerId) {
             throw new BookingIdException("You don't have access for this booking");
         }
 
-        if (bookingFromDb.get().getStatus().equals(BookingStatus.APPROVED)) {
+        if (bookingFromDb.getStatus().equals(BookingStatus.APPROVED)) {
             throw new BookingStatusException("You already approved booking");
         }
 
+        bookingFromDb.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
 
-        if (approved) {
-            bookingFromDb.get().setStatus(BookingStatus.APPROVED);
-        } else {
-            bookingFromDb.get().setStatus(BookingStatus.REJECTED);
-        }
-
-        return BookingMapper.createBookingDto(bookingRepository.save(bookingFromDb.get()));
+        return BookingMapper.createBookingDto(bookingRepository.save(bookingFromDb));
     }
 
     @Override
     public BookingDto getBookingById(int bookingId, int ownerId) {
 
-        Optional<Booking> optionalBooking = bookingRepository.findByBookerIdAndIdOrItem_OwnerIdAndId(ownerId, bookingId, ownerId, bookingId);
-
-        if (optionalBooking.isEmpty()) {
+        Booking bookingFromDb = bookingRepository.findByBookerIdAndIdOrItem_OwnerIdAndId(ownerId, bookingId, ownerId, bookingId).orElseThrow(() -> {
             throw new BookingNotFoundException("Booking not found");
-        }
-        return BookingMapper.createBookingDto(optionalBooking.get());
+        });
+
+        return BookingMapper.createBookingDto(bookingFromDb);
     }
 
     @Override
@@ -105,11 +94,9 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
         List<Booking> bookingList;
 
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-
-        if (userFromDb.isEmpty()) {
+        userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
         switch (state) {
             case "ALL":
@@ -144,11 +131,9 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
         List<Booking> bookingList;
 
-        Optional<User> userFromDb = userRepository.findUserById(ownerId);
-
-        if (userFromDb.isEmpty()) {
+        userRepository.findUserById(ownerId).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
-        }
+        });
 
         switch (state) {
             case "ALL":

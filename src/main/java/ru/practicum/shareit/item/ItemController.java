@@ -11,9 +11,6 @@ import ru.practicum.shareit.item.service.ItemService;
 import javax.validation.Valid;
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -21,21 +18,25 @@ import java.util.Collection;
 public class ItemController {
 
     private final ItemService itemService;
+    private static final String OWNER_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDto postItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public ItemDto postItem(@Valid @RequestBody ItemDto itemDto,
+                            @RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод postItem");
         return itemService.postItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto patchItem(@PathVariable int itemId, @RequestHeader("X-Sharer-User-Id") int ownerId, @RequestBody ItemDto itemDto) {
+    public ItemDto patchItem(@PathVariable int itemId, @RequestHeader(OWNER_HEADER) int ownerId,
+                             @RequestBody ItemDto itemDto) {
         log.debug("Вызван метод patchItem");
         return itemService.patchItem(itemId, ownerId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDtoWithBooking getItemById(@RequestHeader("X-Sharer-User-Id") int ownerId, @PathVariable int itemId) {
+    public ItemDtoWithBooking getItemById(@RequestHeader(OWNER_HEADER) int ownerId,
+                                          @PathVariable int itemId) {
         log.debug("Вызван метод getItemById");
         return itemService.getItemById(ownerId, itemId);
     }
@@ -47,7 +48,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDtoWithBooking> getAllItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public Collection<ItemDtoWithBooking> getAllItems(@RequestHeader(OWNER_HEADER) int ownerId) {
         log.debug("Вызван метод getAllItems");
         return itemService.getAllItems(ownerId);
     }
@@ -59,7 +60,9 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto postComment(@RequestHeader("X-Sharer-User-Id") int ownerId, @PathVariable int itemId, @RequestBody @Valid CommentDto commentDto) {
+    public CommentDto postComment(@RequestHeader(OWNER_HEADER) int ownerId,
+                                  @PathVariable int itemId,
+                                  @RequestBody @Valid CommentDto commentDto) {
         log.debug("Вызван метод postComment");
         return itemService.postComment(ownerId, itemId, commentDto);
     }

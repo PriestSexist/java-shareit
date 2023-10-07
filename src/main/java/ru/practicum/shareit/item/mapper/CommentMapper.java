@@ -5,7 +5,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-public class CommentMapper {
+public final class CommentMapper {
     public static Comment createComment(CommentDto commentDto, User author, Item item) {
         return Comment.builder()
                 .text(commentDto.getText())

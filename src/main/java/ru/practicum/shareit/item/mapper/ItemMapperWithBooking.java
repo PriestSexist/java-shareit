@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public class ItemMapperWithBooking {
+public final class ItemMapperWithBooking {
 
     public static ItemDtoWithBooking createItemDtoWithBooking(Item item, ShortBooking lastBooking, ShortBooking nextBooking, List<CommentDto> comments) {
         return ItemDtoWithBooking.builder()

@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-public class ItemMapper {
+public final class ItemMapper {
     public static Item createItem(ItemDto itemDto, User owner) {
         return Item.builder()
                 .name(itemDto.getName())
