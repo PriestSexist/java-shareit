@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.booking.exception.BookingNotFoundException;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
+import ru.practicum.shareit.item.exception.CommentNotFoundException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.WrongIdException;
 import ru.practicum.shareit.item.mapper.CommentMapper;
@@ -163,7 +163,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
 
         bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(ownerId, localDateTimeNow, BookingStatus.APPROVED).orElseThrow(() -> {
-            throw new BookingNotFoundException("Booking not found");
+            throw new CommentNotFoundException("Booking not found");
         });
 
         User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> {
