@@ -9,9 +9,6 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 import javax.validation.Valid;
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -27,7 +24,8 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto patchUser(@RequestBody UserDto userDto, @PathVariable int id) {
+    public UserDto patchUser(@RequestBody UserDto userDto,
+                             @PathVariable int id) {
         log.debug("Вызван метод patchUser");
         return userServiceImpl.patchUser(id, userDto);
     }

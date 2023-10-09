@@ -7,30 +7,31 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(schema = "PUBLIC", name = "ITEMS")
-public class Item {
-
+@Table(name = "COMMENTS")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "description", nullable = false)
-    private String description;
-
-    @Column(name = "IS_AVAILABLE", nullable = false)
-    private Boolean available;
+    @Column(name = "TEXT")
+    private String text;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "AUTHOR_ID")
+    private User author;
+
+    @Column(name = "CREATION_DATE")
+    private LocalDateTime created;
 
 }
