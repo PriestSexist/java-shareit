@@ -4,7 +4,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface ItemService {
     ItemDto postItem(int ownerId, ItemDto itemDto);
@@ -15,9 +15,9 @@ public interface ItemService {
 
     void deleteItemById(int itemId);
 
-    Collection<ItemDtoWithBooking> getAllItems(int ownerId);
+    List<ItemDtoWithBooking> getAllItems(int ownerId, int from, int size);
 
-    Collection<ItemDto> getSearchedItems(String text);
+    List<ItemDto> getSearchedItems(String text, int from, int size);
 
     CommentDto postComment(int ownerId, int itemId, CommentDto commentDto);
 }
