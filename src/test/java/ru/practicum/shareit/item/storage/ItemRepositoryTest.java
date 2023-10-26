@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemForRequest;
 import ru.practicum.shareit.request.model.ItemItemRequestConnection;
@@ -16,6 +17,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 import java.time.LocalDateTime;
 
 @DataJpaTest
+@TestPropertySource(properties = { "db.name=test"})
 class ItemRepositoryTest {
 
     @Autowired
