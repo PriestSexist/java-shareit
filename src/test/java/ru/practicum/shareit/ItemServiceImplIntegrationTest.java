@@ -189,7 +189,7 @@ class ItemServiceImplIntegrationTest {
         CommentDto commentDtoPosted = itemService.postComment(userDtoPostedBooker.getId(), itemDtoPosted.getId(), commentDtoBeforeWork);
 
         TypedQuery<Comment> query = em.createQuery("Select c from Comment c where c.id = :id", Comment.class);
-        Comment comment = query.setParameter("id", commentDtoBeforeWork.getId()).getSingleResult();
+        Comment comment = query.setParameter("id", commentDtoPosted.getId()).getSingleResult();
 
         assertThat(comment.getId(), equalTo(commentDtoPosted.getId()));
         assertThat(comment.getText(), equalTo(commentDtoPosted.getText()));
