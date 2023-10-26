@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS COMMENTS
             on update cascade on delete cascade
 );
 
-create table ITEM_REQUEST
+create table IF NOT EXISTS ITEM_REQUEST
 (
     ID          INTEGER auto_increment,
     DESCRIPTION CHARACTER VARYING(512)   not null,
