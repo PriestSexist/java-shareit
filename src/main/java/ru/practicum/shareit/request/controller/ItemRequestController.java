@@ -36,8 +36,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllItemRequests(@RequestHeader(OWNER_HEADER) int ownerId,
-                                                   @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                   @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
+                                                   @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                   @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getAllItemRequests");
         return itemRequestService.getAllItemRequests(ownerId, from, size);
     }

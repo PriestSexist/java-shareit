@@ -52,16 +52,16 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDtoWithBooking> getAllItems(@RequestHeader(OWNER_HEADER) int ownerId,
-                                                @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
+                                                @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getAllItems");
         return itemService.getAllItems(ownerId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> getSearchedItems(@RequestParam String text,
-                                          @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                          @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
+                                          @RequestParam(defaultValue = "0") @Min(0) int from,
+                                          @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getSearchedItems");
         return itemService.getSearchedItems(text, from, size);
     }
