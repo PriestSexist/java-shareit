@@ -38,12 +38,12 @@ import static org.hamcrest.Matchers.equalTo;
 @TestPropertySource(properties = { "db.name=test"})
 class ItemServiceImplIntegrationTest {
 
-    private final EntityManager em;
-    private final ItemService itemService;
-    private final UserService userService;
-    private final BookingService bookingService;
+    final EntityManager em;
+    final ItemService itemService;
+    final UserService userService;
+    final BookingService bookingService;
 
-    private static final LocalDateTime DATE = LocalDateTime.of(2022, 10, 20, 14, 37);
+    static final LocalDateTime DATE = LocalDateTime.of(2022, 10, 20, 14, 37);
 
     @Test
     void postItem() {
@@ -181,7 +181,7 @@ class ItemServiceImplIntegrationTest {
         ItemDto itemDtoForPost = new ItemDto(1, "Дрель", "Базированная дрель", Boolean.TRUE, userDtoPostedOwner.getId(), null, null);
         ItemDto itemDtoPosted = itemService.postItem(userDtoPostedOwner.getId(), itemDtoForPost);
 
-        BookingDto bookingDtoForPost = new BookingDto(1, itemDtoPosted.getId(), DATE, DATE.plusDays(3), ItemMapper.createItem(itemDtoPosted, UserMapper.createUser(userDtoPostedOwner)), UserMapper.createUser(userDtoPostedBooker), BookingStatus.APPROVED);
+        BookingDto bookingDtoForPost = new BookingDto(1, itemDtoPosted.getId(), DATE.minusYears(2), DATE.minusYears(2).plusDays(3), ItemMapper.createItem(itemDtoPosted, UserMapper.createUser(userDtoPostedOwner)), UserMapper.createUser(userDtoPostedBooker), BookingStatus.APPROVED);
         BookingDto bookingDtoPosted = bookingService.postBooking(userDtoPostedBooker.getId(), bookingDtoForPost);
         bookingService.patchBooking(bookingDtoPosted.getId(), Boolean.TRUE, userDtoPostedOwner.getId());
 

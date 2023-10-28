@@ -27,8 +27,8 @@ import static org.hamcrest.Matchers.equalTo;
 @TestPropertySource(properties = { "db.name=test"})
 class UserServiceImplIntegrationTest {
 
-    private final EntityManager em;
-    private final UserService userService;
+    final EntityManager em;
+    final UserService userService;
 
     @Test
     void postUser() {

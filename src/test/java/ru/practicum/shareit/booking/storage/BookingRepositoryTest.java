@@ -19,14 +19,14 @@ import java.time.LocalDateTime;
 class BookingRepositoryTest {
 
     @Autowired
-    private BookingRepository bookingRepository;
+    BookingRepository bookingRepository;
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Autowired
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
-    private final LocalDateTime start1 = LocalDateTime.of(2022, 10, 22, 22, 21);
-    private final LocalDateTime start2 = LocalDateTime.of(2024, 10, 20, 22, 21);
+    static final LocalDateTime START_1 = LocalDateTime.of(2022, 10, 22, 22, 21);
+    static final LocalDateTime START_2 = LocalDateTime.of(2024, 10, 20, 22, 21);
 
     @Test
     void findLastByItem_OwnerId() {
@@ -43,8 +43,8 @@ class BookingRepositoryTest {
         Item itemForPost1 = new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, userPostedOwner);
         Item itemPosted1 = itemRepository.save(itemForPost1);
 
-        Booking bookingForPost1 = new Booking(1, start1, start1.plusDays(3), itemPosted1, userPostedBooker1, BookingStatus.APPROVED);
-        Booking bookingForPost2 = new Booking(2, start2, start2.plusDays(3), itemPosted1, userPostedBooker2, BookingStatus.APPROVED);
+        Booking bookingForPost1 = new Booking(1, START_1, START_1.plusDays(3), itemPosted1, userPostedBooker1, BookingStatus.APPROVED);
+        Booking bookingForPost2 = new Booking(2, START_2, START_2.plusDays(3), itemPosted1, userPostedBooker2, BookingStatus.APPROVED);
 
         Booking bookingPosted1 = bookingRepository.save(bookingForPost1);
         bookingRepository.save(bookingForPost2);
@@ -69,8 +69,8 @@ class BookingRepositoryTest {
         Item itemForPost1 = new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, userPostedOwner);
         Item itemPosted1 = itemRepository.save(itemForPost1);
 
-        Booking bookingForPost1 = new Booking(1, start1, start1.plusDays(3), itemPosted1, userPostedBooker1, BookingStatus.APPROVED);
-        Booking bookingForPost2 = new Booking(2, start2, start2.plusDays(3), itemPosted1, userPostedBooker2, BookingStatus.APPROVED);
+        Booking bookingForPost1 = new Booking(1, START_1, START_1.plusDays(3), itemPosted1, userPostedBooker1, BookingStatus.APPROVED);
+        Booking bookingForPost2 = new Booking(2, START_2, START_2.plusDays(3), itemPosted1, userPostedBooker2, BookingStatus.APPROVED);
 
         bookingRepository.save(bookingForPost1);
         Booking bookingPosted2 = bookingRepository.save(bookingForPost2);

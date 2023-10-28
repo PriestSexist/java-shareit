@@ -17,6 +17,7 @@ import ru.practicum.shareit.item.exception.WrongIdException;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,11 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ItemControllerMockMvcTest {
 
     @MockBean
-    private ItemService itemService;
+    ItemService itemService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
     @Autowired
-    private MockMvc mvc;
+    MockMvc mvc;
+    static final LocalDateTime DATE = LocalDateTime.of(2022, 10, 20, 14, 37);
 
     @Test
     void postItem() throws Exception {
@@ -212,7 +214,7 @@ class ItemControllerMockMvcTest {
     @Test
     void postComment() throws Exception {
 
-        CommentDto commentDtoBeforeWork = new CommentDto(1, "норм", "Kick");
+        CommentDto commentDtoBeforeWork = new CommentDto(1, "норм", "Kick", DATE);
 
         when(itemService.postComment(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(CommentDto.class)))
                 .thenReturn(commentDtoBeforeWork);
@@ -232,7 +234,7 @@ class ItemControllerMockMvcTest {
     @Test
     void postCommentThrowsCommentNotFoundException() throws Exception {
 
-        CommentDto commentDtoBeforeWork = new CommentDto(1, "норм", "Kick");
+        CommentDto commentDtoBeforeWork = new CommentDto(1, "норм", "Kick", DATE);
 
         when(itemService.postComment(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(CommentDto.class)))
                 .thenThrow(new CommentNotFoundException("Booking not found"));

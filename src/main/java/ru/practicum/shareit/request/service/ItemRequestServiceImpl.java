@@ -44,7 +44,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return ItemRequestMapper.createItemRequestDtoWithoutItems(itemRequestRepository.save(itemRequest));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<ItemRequestDto> getItemRequests(int ownerId) {
 
@@ -59,7 +59,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<ItemRequestDto> getAllItemRequests(int ownerId, int from, int size) {
 
@@ -75,7 +75,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                         .collect(Collectors.toList()))).getContent();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public ItemRequestDto getItemRequestById(int ownerId, int requestId) {
 

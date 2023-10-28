@@ -28,11 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerMockMvcTest {
 
     @MockBean
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
     @Autowired
-    private MockMvc mvc;
+    MockMvc mvc;
 
 
     @Test

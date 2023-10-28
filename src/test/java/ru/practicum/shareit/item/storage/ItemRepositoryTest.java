@@ -21,13 +21,13 @@ import java.time.LocalDateTime;
 class ItemRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Autowired
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
     @Autowired
-    private ItemRequestRepository itemRequestRepository;
+    ItemRequestRepository itemRequestRepository;
     @Autowired
-    private ItemItemRequestConnectionRepository itemItemRequestConnectionRepository;
+    ItemItemRequestConnectionRepository itemItemRequestConnectionRepository;
 
     @Test
     void findAllItemsForRequestByRequestId() {

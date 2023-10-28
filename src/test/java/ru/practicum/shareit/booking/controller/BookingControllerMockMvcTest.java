@@ -32,18 +32,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookingControllerMockMvcTest {
 
     @MockBean
-    private BookingService bookingService;
+    BookingService bookingService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
     @Autowired
-    private MockMvc mvc;
-    private final LocalDateTime start = LocalDateTime.of(2024, 10, 20, 22, 21);
-    private final LocalDateTime end = LocalDateTime.of(2024, 10, 22, 22, 21);
+    MockMvc mvc;
+    static final LocalDateTime START = LocalDateTime.of(2024, 10, 20, 22, 21);
+    static final LocalDateTime END = LocalDateTime.of(2024, 10, 22, 22, 21);
 
     @Test
     void postBooking() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         when(bookingService.postBooking(Mockito.anyInt(), Mockito.any(BookingDto.class)))
                 .thenReturn(bookingDtoForPost);
@@ -64,7 +64,7 @@ class BookingControllerMockMvcTest {
     @Test
     void postBookingThrowsBookingTimeException() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         when(bookingService.postBooking(Mockito.anyInt(), Mockito.any(BookingDto.class)))
                 .thenThrow(new BookingTimeException("Error with booking time"));
@@ -84,7 +84,7 @@ class BookingControllerMockMvcTest {
     @Test
     void postBookingThrowsItemNotAvailableForBookingException() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         when(bookingService.postBooking(Mockito.anyInt(), Mockito.any(BookingDto.class)))
                 .thenThrow(new ItemNotAvailableForBookingException("Item not available for booking due to available = false"));
@@ -104,7 +104,7 @@ class BookingControllerMockMvcTest {
     @Test
     void postBookingThrowsBookingIdException() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.FALSE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         when(bookingService.postBooking(Mockito.anyInt(), Mockito.any(BookingDto.class)))
                 .thenThrow(new BookingIdException("Item not available for booking due to you can't book your own item"));
@@ -124,7 +124,7 @@ class BookingControllerMockMvcTest {
     @Test
     void patchBooking() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
 
         when(bookingService.patchBooking(Mockito.anyInt(), Mockito.anyBoolean(), Mockito.anyInt()))
                 .thenReturn(bookingDtoForPost);
@@ -181,7 +181,7 @@ class BookingControllerMockMvcTest {
     @Test
     void getBookingById() throws Exception {
 
-        BookingDto bookingDtoForPost = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoForPost = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
 
         when(bookingService.getBookingById(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(bookingDtoForPost);
@@ -200,8 +200,8 @@ class BookingControllerMockMvcTest {
     @Test
     void getItemsThatIBooked() throws Exception {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         when(bookingService.getItemsThatIBooked(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(bookingDtoBeforeWork1, bookingDtoBeforeWork2));
@@ -223,8 +223,8 @@ class BookingControllerMockMvcTest {
     @Test
     void getBookingsOfMyItems() throws Exception {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         when(bookingService.getBookingsOfMyItems(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(List.of(bookingDtoBeforeWork1, bookingDtoBeforeWork2));

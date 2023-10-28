@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.createUserDto(userRepository.save(userFromDb));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public UserDto getUserById(int userId) {
         User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()

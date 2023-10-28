@@ -29,25 +29,25 @@ import java.util.Optional;
 class BookingServiceImpUnitTest {
 
     @Mock
-    private BookingRepository bookingRepository;
+    BookingRepository bookingRepository;
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Mock
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
-    private BookingService bookingService;
-    private final LocalDateTime start = LocalDateTime.of(2024, 10, 20, 22, 21);
-    private final LocalDateTime end = LocalDateTime.of(2024, 10, 22, 22, 21);
+    BookingService bookingService;
+    static final LocalDateTime START = LocalDateTime.of(2024, 10, 20, 22, 21);
+    static final LocalDateTime END = LocalDateTime.of(2024, 10, 22, 22, 21);
 
     @BeforeEach
-    public void generator() {
+    void generator() {
         bookingService = new BookingServiceImpl(bookingRepository, userRepository, itemRepository);
     }
 
     @Test
     void postBookingThrowsBookingTimeException() {
 
-        BookingDto bookingDto = new BookingDto(1, 1, end, start, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(1, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDto = new BookingDto(1, 1, END, START, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(1, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         Assertions.assertThrows(BookingTimeException.class, () -> bookingService.postBooking(1, bookingDto));
     }
@@ -55,7 +55,7 @@ class BookingServiceImpUnitTest {
     @Test
     void postBookingThrowsItemNotAvailableForBookingException() {
 
-        BookingDto bookingDto = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDto = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new User(1, "Viktor B", "vitekb650@gmail.com")));
@@ -69,7 +69,7 @@ class BookingServiceImpUnitTest {
     @Test
     void postBookingThrowsBookingIdException() {
 
-        BookingDto bookingDto = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDto = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new User(1, "Viktor B", "vitekb650@gmail.com")));
@@ -83,7 +83,7 @@ class BookingServiceImpUnitTest {
     @Test
     void postBooking() {
 
-        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
+        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING);
 
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new User(5, "Viktor B", "vitekb650@gmail.com")));
@@ -92,7 +92,7 @@ class BookingServiceImpUnitTest {
                 .thenReturn(Optional.of(new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(1, "Viktor B", "vitekb650@gmail.com"))));
 
         Mockito.when(bookingRepository.save(Mockito.any(Booking.class)))
-                .thenReturn(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING));
+                .thenReturn(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING));
 
         BookingDto bookingDtoAfterWork = bookingService.postBooking(5, bookingDtoBeforeWork);
 
@@ -113,7 +113,7 @@ class BookingServiceImpUnitTest {
     void patchBookingThrowsBookingIdException() {
 
         Mockito.when(bookingRepository.findBookingById(Mockito.anyInt()))
-                .thenReturn(Optional.of(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
+                .thenReturn(Optional.of(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
 
         Assertions.assertThrows(BookingIdException.class, () -> bookingService.patchBooking(1, Boolean.TRUE, 2));
 
@@ -123,7 +123,7 @@ class BookingServiceImpUnitTest {
     void patchBookingThrowsBookingStatusException() {
 
         Mockito.when(bookingRepository.findBookingById(Mockito.anyInt()))
-                .thenReturn(Optional.of(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
+                .thenReturn(Optional.of(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
 
         Assertions.assertThrows(BookingStatusException.class, () -> bookingService.patchBooking(1, Boolean.TRUE, 3));
 
@@ -132,13 +132,13 @@ class BookingServiceImpUnitTest {
     @Test
     void patchBooking() {
 
-        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
 
         Mockito.when(bookingRepository.findBookingById(Mockito.anyInt()))
-                .thenReturn(Optional.of(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING)));
+                .thenReturn(Optional.of(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.WAITING)));
 
         Mockito.when(bookingRepository.save(Mockito.any(Booking.class)))
-                .thenReturn(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED));
+                .thenReturn(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED));
 
         BookingDto bookingDtoAfterWork = bookingService.patchBooking(1, Boolean.TRUE, 3);
 
@@ -149,10 +149,10 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingById() {
 
-        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
 
         Mockito.when(bookingRepository.findByBookerIdAndIdOrItem_OwnerIdAndId(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Optional.of(new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
+                .thenReturn(Optional.of(new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED)));
 
         BookingDto bookingDtoAfterWork = bookingService.getBookingById(1, 1);
 
@@ -162,15 +162,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedAll() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -192,15 +192,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedCurrent() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -222,15 +222,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedPast() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -252,15 +252,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedFuture() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -282,15 +282,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedWaiting() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -312,15 +312,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getItemsThatIBookedRejected() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -351,15 +351,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsAll() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -381,15 +381,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsCurrent() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -411,15 +411,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsPast() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -441,15 +441,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsFuture() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -471,15 +471,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsWaiting() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);
@@ -501,15 +501,15 @@ class BookingServiceImpUnitTest {
     @Test
     void getBookingsOfMyItemsRejected() {
 
-        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork1 = new BookingDto(1, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        BookingDto bookingDtoBeforeWork2 = new BookingDto(2, 1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<BookingDto> bookingDtoListBeforeWork = new ArrayList<>();
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork1);
         bookingDtoListBeforeWork.add(bookingDtoBeforeWork2);
 
-        Booking bookingBeforeWork1 = new Booking(1, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
-        Booking bookingBeforeWork2 = new Booking(2, start, end, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork1 = new Booking(1, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor B", "vitekb650@gmail.com")), new User(2, "Kick", "kick@gmail.com"), BookingStatus.APPROVED);
+        Booking bookingBeforeWork2 = new Booking(2, START, END, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(3, "Viktor", "vitekb@gmail.com")), new User(4, "VB", "VB@gmail.com"), BookingStatus.APPROVED);
 
         List<Booking> bookings = new ArrayList<>();
         bookings.add(bookingBeforeWork1);

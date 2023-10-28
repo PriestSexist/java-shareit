@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class CommentDto {
@@ -15,5 +14,5 @@ public class CommentDto {
     @NotBlank
     private final String text;
     private final String authorName;
-    private LocalDateTime created = LocalDateTime.now();
+    private final LocalDateTime created;
 }

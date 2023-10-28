@@ -31,10 +31,10 @@ import static org.hamcrest.Matchers.equalTo;
 @TestPropertySource(properties = { "db.name=test"})
 class ItemRequestServiceImplIntegrationTest {
 
-    private final EntityManager em;
-    private final UserService userService;
-    private final ItemRequestService itemRequestService;
-    private static final LocalDateTime DATE = LocalDateTime.of(2023, 10, 20, 14, 37);
+    final EntityManager em;
+    final UserService userService;
+    final ItemRequestService itemRequestService;
+    static final LocalDateTime DATE = LocalDateTime.of(2023, 10, 20, 14, 37);
 
     @Test
     void postItemRequest() {

@@ -31,12 +31,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ItemRequestControllerMockMvcTest {
 
     @MockBean
-    private ItemRequestService itemRequestService;
+    ItemRequestService itemRequestService;
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
     @Autowired
-    private MockMvc mvc;
-    private static final LocalDateTime DATE = LocalDateTime.of(2024, 10, 20, 14, 37);
+    MockMvc mvc;
+    static final LocalDateTime DATE = LocalDateTime.of(2024, 10, 20, 14, 37);
 
 
     @Test

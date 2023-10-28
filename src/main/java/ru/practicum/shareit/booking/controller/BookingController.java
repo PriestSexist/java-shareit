@@ -46,8 +46,8 @@ public class BookingController {
     @GetMapping
     public List<BookingDto> getItemsThatIBooked(@RequestParam(defaultValue = "ALL") String state,
                                                 @RequestHeader(OWNER_HEADER) int ownerId,
-                                                @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
+                                                @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getItemsThatIBooked");
         return bookingService.getItemsThatIBooked(state, ownerId, from, size);
     }
@@ -55,8 +55,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getBookingsOfMyItems(@RequestHeader(OWNER_HEADER) int ownerId,
                                                  @RequestParam(defaultValue = "ALL") String state,
-                                                 @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                 @RequestParam(value = "size", defaultValue = "10") @Min(1) int size) {
+                                                 @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                 @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getBookingsOfMyItems");
         return bookingService.getBookingsOfMyItems(state, ownerId, from, size);
     }

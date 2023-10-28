@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -28,6 +30,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public BookingDto postBooking(int ownerId, BookingDto bookingDto) {
 
@@ -53,6 +56,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.createBookingDto(bookingRepository.save(booking));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public BookingDto patchBooking(int bookingId, Boolean approved, int ownerId) {
 
@@ -71,6 +75,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.createBookingDto(bookingRepository.save(bookingFromDb));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public BookingDto getBookingById(int bookingId, int ownerId) {
 
@@ -79,6 +84,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.createBookingDto(bookingFromDb);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<BookingDto> getItemsThatIBooked(String state, int ownerId, int from, int size) {
 
@@ -115,6 +121,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingList.map(BookingMapper::createBookingDto).getContent();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<BookingDto> getBookingsOfMyItems(String state, int ownerId, int from, int size) {
         LocalDateTime localDateTimeNow = LocalDateTime.now();

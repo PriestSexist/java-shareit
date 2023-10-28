@@ -27,18 +27,18 @@ import java.util.Optional;
 class ItemRequestServiceImplUnitTest {
 
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Mock
-    private ItemRequestRepository itemRequestRepository;
+    ItemRequestRepository itemRequestRepository;
     @Mock
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
-    private ItemRequestService itemRequestService;
+    ItemRequestService itemRequestService;
 
-    private static final LocalDateTime DATE = LocalDateTime.of(2024, 10, 20, 14, 37);
+    static final LocalDateTime DATE = LocalDateTime.of(2024, 10, 20, 14, 37);
 
     @BeforeEach
-    public void generator() {
+    void generator() {
         itemRequestService = new ItemRequestServiceImpl(userRepository, itemRequestRepository, itemRepository);
     }
 

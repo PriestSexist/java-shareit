@@ -17,20 +17,20 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplUnitTest {
+class UserServiceImplUnitTest {
 
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
-    private UserService userService;
+    UserService userService;
 
     @BeforeEach
-    public void generator() {
+    void generator() {
         userService = new UserServiceImpl(userRepository);
     }
 
     @Test
-    public void postUser() {
+    void postUser() {
         UserDto userDtoBeforeSave = new UserDto(1, "Viktor B", "vitekb650@gmail.com");
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenReturn(new User(1, "Viktor B", "vitekb650@gmail.com"));
@@ -40,7 +40,7 @@ public class UserServiceImplUnitTest {
     }
 
     @Test
-    public void patchUserThrowsUserNotFoundException() {
+    void patchUserThrowsUserNotFoundException() {
 
         UserDto userDtoPatchUser = new UserDto(1, "Kick", "vitekb650@gmail.com");
 
@@ -51,7 +51,7 @@ public class UserServiceImplUnitTest {
     }
 
     @Test
-    public void patchUser() {
+    void patchUser() {
 
         UserDto userDtoPatchUserName = new UserDto(1, "Kick", "vitekb650@gmail.com");
 

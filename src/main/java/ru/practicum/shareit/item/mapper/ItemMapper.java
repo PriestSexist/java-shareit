@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.mapper;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.ShortBooking;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -11,7 +12,8 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-public final class ItemMapper {
+@UtilityClass
+public class ItemMapper {
     public static Item createItem(ItemDto itemDto, User owner) {
         return Item.builder()
                 .name(itemDto.getName())

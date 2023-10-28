@@ -40,23 +40,23 @@ import java.util.Optional;
 class ItemServiceImplUnitTest {
 
     @Mock
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Mock
-    private BookingRepository bookingRepository;
+    BookingRepository bookingRepository;
     @Mock
-    private CommentRepository commentRepository;
+    CommentRepository commentRepository;
     @Mock
-    private ItemRequestRepository itemRequestRepository;
+    ItemRequestRepository itemRequestRepository;
     @Mock
-    private ItemItemRequestConnectionRepository itemItemRequestConnectionRepository;
+    ItemItemRequestConnectionRepository itemItemRequestConnectionRepository;
 
-    private ItemService itemService;
-    private static final LocalDateTime DATE = LocalDateTime.of(2023, 10, 20, 14, 37);
+    ItemService itemService;
+    static final LocalDateTime DATE = LocalDateTime.of(2023, 10, 20, 14, 37);
 
     @BeforeEach
-    public void generator() {
+    void generator() {
         itemService = new ItemServiceImpl(itemRepository, userRepository, bookingRepository, commentRepository, itemRequestRepository, itemItemRequestConnectionRepository);
     }
 

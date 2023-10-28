@@ -97,7 +97,7 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.createItemDtoWithoutComments(itemRepository.save(itemFromDb));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public ItemDtoWithBooking getItemById(int ownerId, int itemId) {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
@@ -133,7 +133,7 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.deleteById(itemId);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<ItemDtoWithBooking> getAllItems(int ownerId, int from, int size) {
         LocalDateTime localDateTimeNow = LocalDateTime.now();
@@ -150,7 +150,7 @@ public class ItemServiceImpl implements ItemService {
                 .getContent();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public List<ItemDto> getSearchedItems(String text, int from, int size) {
 
@@ -180,6 +180,7 @@ public class ItemServiceImpl implements ItemService {
         Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
 
         Comment comment = CommentMapper.createComment(commentDto, userFromDb, itemFromDb);
+        comment.setCreated(localDateTimeNow);
 
         return CommentMapper.createCommentDto(commentRepository.save(comment));
 

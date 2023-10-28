@@ -34,13 +34,13 @@ import static org.hamcrest.Matchers.equalTo;
 @TestPropertySource(properties = { "db.name=test"})
 class BookingServiceImplIntegrationTest {
 
-    private final EntityManager em;
-    private final ItemService itemService;
-    private final UserService userService;
-    private final BookingService bookingService;
+    final EntityManager em;
+    final ItemService itemService;
+    final UserService userService;
+    final BookingService bookingService;
 
-    private final LocalDateTime start = LocalDateTime.of(2024, 10, 20, 22, 21);
-    private final LocalDateTime end = LocalDateTime.of(2024, 10, 22, 22, 21);
+    static final LocalDateTime start = LocalDateTime.of(2024, 10, 20, 22, 21);
+    static final LocalDateTime end = LocalDateTime.of(2024, 10, 22, 22, 21);
 
     @Test
     void postBooking() {
