@@ -20,7 +20,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "TEXT")
+    @Column(name = "CONTENT")
     private String text;
 
     @ManyToOne

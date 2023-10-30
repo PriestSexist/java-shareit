@@ -1,21 +1,24 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class BookingController {
 
-    private final BookingServiceImpl bookingService;
+    private final BookingService bookingService;
     private static final String OWNER_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
@@ -41,16 +44,20 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingDto> getItemsThatIBooked(@RequestParam(defaultValue = "ALL") String state,
-                                                      @RequestHeader(OWNER_HEADER) int ownerId) {
+    public List<BookingDto> getItemsThatIBooked(@RequestParam(defaultValue = "ALL") String state,
+                                                @RequestHeader(OWNER_HEADER) int ownerId,
+                                                @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getItemsThatIBooked");
-        return bookingService.getItemsThatIBooked(state, ownerId);
+        return bookingService.getItemsThatIBooked(state, ownerId, from, size);
     }
 
     @GetMapping("/owner")
-    public Collection<BookingDto> getBookingsOfMyItems(@RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestHeader(OWNER_HEADER) int ownerId) {
+    public List<BookingDto> getBookingsOfMyItems(@RequestHeader(OWNER_HEADER) int ownerId,
+                                                 @RequestParam(defaultValue = "ALL") String state,
+                                                 @RequestParam(defaultValue = "0") @Min(0) int from,
+                                                 @RequestParam(defaultValue = "10") @Min(1) int size) {
         log.debug("Вызван метод getBookingsOfMyItems");
-        return bookingService.getBookingsOfMyItems(state, ownerId);
+        return bookingService.getBookingsOfMyItems(state, ownerId, from, size);
     }
 }

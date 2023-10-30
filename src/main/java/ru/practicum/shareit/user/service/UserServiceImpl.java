@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.exception.SameEmailException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,13 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto patchUser(int userId, UserDto userDto) {
 
-        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> {
-            throw new UserNotFoundException("User not found");
-        });
-
-        if (userFromDb.getId() != userId) {
-            throw new SameEmailException("This email already exists");
-        }
+        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (userDto.getEmail() != null) {
             userFromDb.setEmail(userDto.getEmail());
@@ -50,27 +43,23 @@ public class UserServiceImpl implements UserService {
         return UserMapper.createUserDto(userRepository.save(userFromDb));
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public UserDto getUserById(int userId) {
-        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> {
-            throw new UserNotFoundException("User not found");
-        });
+        User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
         return UserMapper.createUserDto(userFromDb);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void deleteUserById(int userId) {
-        userRepository.findUserById(userId).orElseThrow(() -> {
-            throw new UserNotFoundException("User not found");
-        });
+        userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
         userRepository.deleteById(userId);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
-    public Collection<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(UserMapper::createUserDto)
                 .collect(Collectors.toList());
