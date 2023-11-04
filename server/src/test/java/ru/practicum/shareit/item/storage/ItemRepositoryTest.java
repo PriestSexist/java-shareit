@@ -3,8 +3,6 @@ package ru.practicum.shareit.item.storage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
@@ -22,7 +20,7 @@ import java.time.LocalDateTime;
 
 @Transactional
 @DataJpaTest
-@TestPropertySource(properties = { "db.name=test"})
+@TestPropertySource(properties = {"db.name=test"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ItemRepositoryTest {
 

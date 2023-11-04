@@ -32,11 +32,11 @@ public class UserServiceImpl implements UserService {
 
         User userFromDb = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if (userDto.getEmail()!=null) {
+        if (userDto.getEmail() != null) {
             userFromDb.setEmail(userDto.getEmail());
         }
 
-        if (userDto.getName()!=null) {
+        if (userDto.getName() != null) {
             userFromDb.setName(userDto.getName());
         }
 
