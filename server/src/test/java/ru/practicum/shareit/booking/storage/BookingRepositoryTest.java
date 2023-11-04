@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 
 @Transactional
 @DataJpaTest
-@TestPropertySource("classpath:application-test.properties")@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource("classpath:application-test.properties")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookingRepositoryTest {
 
     @Autowired

@@ -35,7 +35,8 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@TestPropertySource("classpath:application-test.properties")class ItemServiceImplIntegrationTest {
+@TestPropertySource("classpath:application-test.properties")
+class ItemServiceImplIntegrationTest {
 
     final EntityManager em;
     final ItemService itemService;
