@@ -100,7 +100,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     @Override
     public ItemDtoWithBooking getItemById(int ownerId, int itemId) {
-        LocalDateTime localDateTimeNow = LocalDateTime.now();
 
         Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
 
@@ -110,8 +109,8 @@ public class ItemServiceImpl implements ItemService {
 
         if (ownerId == itemFromDb.getOwner().getId()) {
 
-            List<Booking> list = bookingRepository.findLastByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED, localDateTimeNow);
-            List<Booking> list1 = bookingRepository.findNextByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED, localDateTimeNow);
+            List<Booking> list = bookingRepository.findLastByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED);
+            List<Booking> list1 = bookingRepository.findNextByItem_OwnerId(itemId, ownerId, BookingStatus.REJECTED);
 
             Optional<Booking> lastBookingOptional = list.stream().findFirst();
             Optional<Booking> nextBookingOptional = list1.stream().findFirst();
@@ -171,16 +170,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto postComment(int ownerId, int itemId, CommentDto commentDto) {
 
-        LocalDateTime localDateTimeNow = LocalDateTime.now();
-
-        bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(ownerId, localDateTimeNow, BookingStatus.APPROVED).orElseThrow(() -> new CommentNotFoundException("Booking not found"));
+        bookingRepository.findFirstByBookerIdAndEndBefore(ownerId, LocalDateTime.now()).orElseThrow(() -> new CommentNotFoundException("Booking not found"));
 
         User userFromDb = userRepository.findUserById(ownerId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Item itemFromDb = itemRepository.findItemById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
 
         Comment comment = CommentMapper.createComment(commentDto, userFromDb, itemFromDb);
-        comment.setCreated(localDateTimeNow);
+        comment.setCreated(LocalDateTime.now());
 
         return CommentMapper.createCommentDto(commentRepository.save(comment));
 

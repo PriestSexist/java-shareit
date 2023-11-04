@@ -35,8 +35,6 @@ class BookingRepositoryTest {
     @Test
     void findLastByItem_OwnerId() {
 
-        LocalDateTime currentTime = LocalDateTime.now();
-
         User userBeforeWorkItemOwner = new User(1, "Viktor B", "vitekb650@gmail.com");
         User userBeforeWorkItemBooker1 = new User(2, "Kick", "Kick@gmail.com");
         User userBeforeWorkItemBooker2 = new User(3, "Ron", "Ronaldo@gmail.com");
@@ -53,15 +51,13 @@ class BookingRepositoryTest {
         Booking bookingPosted1 = bookingRepository.save(bookingForPost1);
         bookingRepository.save(bookingForPost2);
 
-        Booking booking = bookingRepository.findLastByItem_OwnerId(itemPosted1.getId(), userPostedOwner.getId(), BookingStatus.REJECTED, currentTime).stream().findFirst().get();
+        Booking booking = bookingRepository.findLastByItem_OwnerId(itemPosted1.getId(), userPostedOwner.getId(), BookingStatus.REJECTED).stream().findFirst().get();
 
         Assertions.assertEquals(bookingPosted1, booking);
     }
 
     @Test
     void findNextByItem_OwnerId() {
-
-        LocalDateTime currentTime = LocalDateTime.now();
 
         User userBeforeWorkItemOwner = new User(1, "Viktor B", "vitekb650@gmail.com");
         User userBeforeWorkItemBooker1 = new User(2, "Kick", "Kick@gmail.com");
@@ -79,7 +75,7 @@ class BookingRepositoryTest {
         bookingRepository.save(bookingForPost1);
         Booking bookingPosted2 = bookingRepository.save(bookingForPost2);
 
-        Booking booking = bookingRepository.findNextByItem_OwnerId(itemPosted1.getId(), userPostedOwner.getId(), BookingStatus.REJECTED, currentTime).stream().findFirst().get();
+        Booking booking = bookingRepository.findNextByItem_OwnerId(itemPosted1.getId(), userPostedOwner.getId(), BookingStatus.REJECTED).stream().findFirst().get();
 
         Assertions.assertEquals(bookingPosted2, booking);
 

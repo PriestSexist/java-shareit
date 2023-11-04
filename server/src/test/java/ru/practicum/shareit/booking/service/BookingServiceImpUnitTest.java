@@ -203,7 +203,7 @@ class BookingServiceImpUnitTest {
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new User(1, "Viktor B", "vitekb650@gmail.com")));
 
-        Mockito.when(bookingRepository.findAllByStartIsBeforeAndEndIsAfterAndBookerIdOrderByStartDesc(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyInt(), Mockito.any(PageRequest.class)))
+        Mockito.when(bookingRepository.findAllByStartBeforeAndEndAfterAndBookerIdOrderByStartAsc(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(bookingsPage);
 
         List<BookingDto> bookingDtoListAfterWork = bookingService.getItemsThatIBooked("CURRENT", 1, 0, 5);
@@ -392,7 +392,7 @@ class BookingServiceImpUnitTest {
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))
                 .thenReturn(Optional.of(new User(1, "Viktor B", "vitekb650@gmail.com")));
 
-        Mockito.when(bookingRepository.findAllByStartIsBeforeAndEndIsAfterAndItem_OwnerIdOrderByStartDesc(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyInt(), Mockito.any(PageRequest.class)))
+        Mockito.when(bookingRepository.findAllByStartBeforeAndEndAfterAndItem_OwnerId(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class), Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(bookingsPage);
 
         List<BookingDto> bookingDtoListAfterWork = bookingService.getBookingsOfMyItems("CURRENT", 1, 0, 5);

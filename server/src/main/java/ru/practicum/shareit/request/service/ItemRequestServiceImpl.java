@@ -33,12 +33,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto postItemRequest(ItemRequestDto itemRequestDto, int ownerId) {
 
-        LocalDateTime currentTime = LocalDateTime.now();
-
         User user = userRepository.findUserById(ownerId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         ItemRequest itemRequest = ItemRequestMapper.createItemRequest(itemRequestDto);
-        itemRequest.setCreated(currentTime);
+        itemRequest.setCreated(LocalDateTime.now());
         itemRequest.setUser(user);
 
         return ItemRequestMapper.createItemRequestDtoWithoutItems(itemRequestRepository.save(itemRequest));

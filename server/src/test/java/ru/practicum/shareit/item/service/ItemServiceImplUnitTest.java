@@ -264,7 +264,7 @@ class ItemServiceImplUnitTest {
 
     @Test
     void postCommentCommentNotFoundException() {
-        Mockito.when(bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(Mockito.anyInt(), Mockito.any(LocalDateTime.class), Mockito.any(BookingStatus.class)))
+        Mockito.when(bookingRepository.findFirstByBookerIdAndEndBefore(Mockito.anyInt(), Mockito.any(LocalDateTime.class)))
                 .thenThrow(new CommentNotFoundException("Booking not found"));
 
         Assertions.assertThrows(CommentNotFoundException.class, () -> itemService.postComment(1, 1, new CommentDto(1, "норм", "Biktor V", DATE)));
@@ -275,7 +275,7 @@ class ItemServiceImplUnitTest {
 
         CommentDto commentDtoBeforeWork = new CommentDto(1, "норм", "Viktor B", DATE);
 
-        Mockito.when(bookingRepository.findFirstByBookerIdAndEndBeforeAndStatus(Mockito.anyInt(), Mockito.any(LocalDateTime.class), Mockito.any(BookingStatus.class)))
+        Mockito.when(bookingRepository.findFirstByBookerIdAndEndBefore(Mockito.anyInt(), Mockito.any(LocalDateTime.class)))
                 .thenReturn(Optional.of(new Booking(1, DATE, DATE, new Item(1, "Дрель", "Базированная дрель", Boolean.TRUE, new User(1, "Viktor B", "vitekb650@gmail.com")), new User(1, "Viktor B", "vitekb650@gmail.com"), BookingStatus.WAITING)));
 
         Mockito.when(userRepository.findUserById(Mockito.anyInt()))

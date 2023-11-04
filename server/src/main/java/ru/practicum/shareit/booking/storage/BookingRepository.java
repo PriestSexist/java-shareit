@@ -20,7 +20,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     Page<Booking> findAllByBookerIdOrderByStartDesc(Integer bookerId, Pageable pageable);
 
-    Page<Booking> findAllByStartIsBeforeAndEndIsAfterAndBookerIdOrderByStartDesc(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer bookerId, Pageable pageable);
+    Page<Booking> findAllByStartBeforeAndEndAfterAndBookerIdOrderByStartAsc(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer bookerId, Pageable pageable);
 
     Page<Booking> findAllByEndIsBeforeAndBookerIdOrderByStartDesc(LocalDateTime localDateTime, Integer bookerId, Pageable pageable);
 
@@ -30,7 +30,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     Page<Booking> findAllByItem_OwnerIdOrderByStartDesc(Integer ownerId, Pageable pageable);
 
-    Page<Booking> findAllByStartIsBeforeAndEndIsAfterAndItem_OwnerIdOrderByStartDesc(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer ownerId, Pageable pageable);
+    Page<Booking> findAllByStartBeforeAndEndAfterAndItem_OwnerId(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer ownerId, Pageable pageable);
 
     Page<Booking> findAllByEndIsBeforeAndItem_OwnerIdOrderByStartDesc(LocalDateTime localDateTime, Integer ownerId, Pageable pageable);
 
@@ -47,18 +47,18 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             "where b.item.id = ?1 " +
             "and b.item.owner.id = ?2 " +
             "and b.status <> ?3 " +
-            "and b.start < ?4 " +
+            "and b.start <= now() " +
             "order by b.start desc ")
-    List<Booking> findLastByItem_OwnerId(Integer itemId, Integer ownerId, BookingStatus status, LocalDateTime currentTime);
+    List<Booking> findLastByItem_OwnerId(Integer itemId, Integer ownerId, BookingStatus status);
 
     @Query(value = "select b " +
             "from Booking b " +
             "where b.item.id = ?1 " +
             "and b.item.owner.id = ?2 " +
             "and b.status <> ?3 " +
-            "and b.start > ?4 " +
+            "and b.start > now()  " +
             "order by b.start ")
-    List<Booking> findNextByItem_OwnerId(Integer itemId, Integer ownerId, BookingStatus status, LocalDateTime currentTime);
+    List<Booking> findNextByItem_OwnerId(Integer itemId, Integer ownerId, BookingStatus status);
 
-    Optional<Booking> findFirstByBookerIdAndEndBeforeAndStatus(Integer bookerId, LocalDateTime currentTime, BookingStatus status);
+    Optional<Booking> findFirstByBookerIdAndEndBefore(Integer bookerId, LocalDateTime currentTime);
 }
