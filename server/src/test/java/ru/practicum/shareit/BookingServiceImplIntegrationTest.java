@@ -31,8 +31,7 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@TestPropertySource(properties = {"DATASOURCE_URL=jdbc:postgresql://localhost:5432/test", "POSTGRES_USER=root", "POSTGRES_PASSWORD=root"})
-class BookingServiceImplIntegrationTest {
+@TestPropertySource("classpath:application-test.properties")class BookingServiceImplIntegrationTest {
 
     final EntityManager em;
     final ItemService itemService;

@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 
 @Transactional
 @DataJpaTest
-@TestPropertySource(properties = {"DATASOURCE_URL=jdbc:postgresql://localhost:5432/test", "POSTGRES_USER=root", "POSTGRES_PASSWORD=root"})
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource("classpath:application-test.properties")@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookingRepositoryTest {
 
     @Autowired
