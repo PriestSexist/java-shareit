@@ -28,4 +28,3 @@ services:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-  env:
