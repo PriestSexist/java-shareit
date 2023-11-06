@@ -17,6 +17,7 @@ public class ItemRequestClient extends BaseClient {
     private static final String API_PREFIX = "/requests";
     private static final String FROM = "from";
     private static final String SIZE = "size";
+
     @Autowired
     public ItemRequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
