@@ -20,7 +20,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     Page<Booking> findAllByBookerIdOrderByStartDesc(Integer bookerId, Pageable pageable);
 
-    Page<Booking> findAllByStartBeforeAndEndAfterAndBookerIdOrderByStartAsc(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer bookerId, Pageable pageable);
+    Page<Booking> findAllByStartBeforeAndEndAfterAndBookerId(LocalDateTime localDateTime, LocalDateTime sameLocalDateTime, Integer bookerId, Pageable pageable);
 
     Page<Booking> findAllByEndIsBeforeAndBookerIdOrderByStartDesc(LocalDateTime localDateTime, Integer bookerId, Pageable pageable);
 

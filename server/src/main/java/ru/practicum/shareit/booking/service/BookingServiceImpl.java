@@ -96,7 +96,7 @@ public class BookingServiceImpl implements BookingService {
                 bookingList = bookingRepository.findAllByBookerIdOrderByStartDesc(ownerId, pageRequest);
                 break;
             case "CURRENT":
-                bookingList = bookingRepository.findAllByStartBeforeAndEndAfterAndBookerIdOrderByStartAsc(localDateTimeNow, localDateTimeNow, ownerId, pageRequest);
+                bookingList = bookingRepository.findAllByStartBeforeAndEndAfterAndBookerId(localDateTimeNow, localDateTimeNow, ownerId, pageRequest);
                 break;
             case "PAST":
                 bookingList = bookingRepository.findAllByEndIsBeforeAndBookerIdOrderByStartDesc(localDateTimeNow, ownerId, pageRequest);
