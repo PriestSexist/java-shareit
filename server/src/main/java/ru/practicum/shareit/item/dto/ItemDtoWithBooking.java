@@ -12,11 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemDtoWithBooking {
     private final int id;
-    //@NotBlank(message = "name can't be blank")
     private final String name;
-    //@NotBlank(message = "description can't be blank")
     private final String description;
-    //@NotNull(message = "available can't be null")
     private final Boolean available;
     private final int ownerId;
     private final ShortBooking lastBooking;

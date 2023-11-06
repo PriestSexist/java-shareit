@@ -14,11 +14,8 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class ItemDto {
     private final int id;
-    //@NotBlank(message = "name can't be blank")
     private final String name;
-    //@NotBlank(message = "description can't be blank")
     private final String description;
-    //@NotNull(message = "available can't be null")
     private final Boolean available;
     private final int ownerId;
     private final List<CommentDto> comments;
