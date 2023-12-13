@@ -9,7 +9,7 @@ Java, Spring Boot, PostgreSQL, JPA(Hibernate), Maven, MockMvc, Junit, Docker, Lo
 ## Architecture
 _______________________________________________________________
 Web-service consists of two modeules: main service(server) and gateway service(gateway). 
-Main service works with requests from gateway service: public. Gateway service validates incoming data
+Main service works with requests from gateway service. Gateway service validates incoming data
 
 The interaction of modules is made through RestTemplate;
 
