@@ -19,5 +19,5 @@ _______________________________________________________________
 ## Requirements
 [Docker](https://www.docker.com/) is required as a minimum for the service to work, Linux system or WSL to run a service in a container. 
 
-## DB schema of main api
+## DB schema
 ![Screenshot](schema.png)
